@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RocketS : MonoBehaviour
 {
     Rigidbody rigidBody;
     AudioSource fly;
-    bool flying = false;
+    private bool flying = false; // Used for thrust fade in and out sound
     public float flyPower = 100f;
     public float rotationSpd= 100f;
 
@@ -49,13 +50,15 @@ public class RocketS : MonoBehaviour
     void OnCollisionEnter(Collision collision) {
         switch(collision.gameObject.tag){
             case "Friendly":
-                print("Ok"); 
+                //print("Ok"); 
                 break;
-            case "Fuel":
-                print("Fuel"); 
+            case "Finish":
+                print("Hit finish");
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
                 break;
             default:
-                print("Dead");   
+                print("Dead");
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
                 break;
         }  
     }
