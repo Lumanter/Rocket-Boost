@@ -1,17 +1,26 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using EZCameraShake;
 
 public class RocketS : MonoBehaviour
 {
     Rigidbody rigidBody;
     AudioSource sfx;
-    private bool flying = false; // Used for thrust fade in and out sound
+
+    private bool flying = false; // Used for thrust fade in and out sound effect
     public float flyPower = 100f;
     public float rotationSpd= 100f;
+
     [SerializeField] AudioClip engine;
     [SerializeField] AudioClip crash;
     [SerializeField] AudioClip success;
 
+    [SerializeField] ParticleSystem engineParticles;
+    [SerializeField] ParticleSystem crashParticles;
+    [SerializeField] ParticleSystem successParticles;
+
+    //public cameraShake camShake;
+    public 
 
     enum State {Alive,Dying,Transcending}
     State state = State.Alive;
@@ -24,9 +33,13 @@ public class RocketS : MonoBehaviour
     }
 
     private void ProcessInput(){
+
         if(Input.GetKey("up")){
             rigidBody.AddRelativeForce(Vector3.up*flyPower*Time.deltaTime);
-            if(!flying){
+
+            engineParticles.Play();
+
+            if (!flying){
                 flying=true;
                 sfx.Stop();
                 sfx.volume=0;
@@ -37,9 +50,11 @@ public class RocketS : MonoBehaviour
                 sfx.volume+= 0.3f*Time.deltaTime;
         }else{
             flying= false;
-            if(sfx.isPlaying && state == State.Alive){
+            if(sfx.isPlaying && state == State.Alive)
                 if(sfx.volume!=0.0f)sfx.volume-= 0.78f*Time.deltaTime;
-            } 
+
+            engineParticles.Stop();
+
         }
 
         rigidBody.freezeRotation=true;
@@ -62,7 +77,9 @@ public class RocketS : MonoBehaviour
     private void RestartScene(){
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
     void OnCollisionEnter(Collision collision) {
+        //prevents unnecessary processing when not alive
         if (state != State.Alive)return;
 
         switch(collision.gameObject.tag){
@@ -74,6 +91,10 @@ public class RocketS : MonoBehaviour
                 sfx.volume = 1;
                 sfx.Stop();
                 sfx.PlayOneShot(success);
+                //StartCoroutine(camShake.Shake(.2f, .8f));
+                CameraShaker.Instance.ShakeOnce(10f, 20f, .1f, 1f);
+
+                successParticles.Play();
                 Invoke("LoadNextScene", 1.2f);
                 break;
             default:
@@ -82,6 +103,12 @@ public class RocketS : MonoBehaviour
                 sfx.Stop();
                 sfx.volume = 1;
                 sfx.PlayOneShot(crash);
+
+                //StartCoroutine(camShake.Shake(.2f,.4f));
+                CameraShaker.Instance.ShakeOnce(5f,12f,.1f,1f);
+
+                crashParticles.Play();
+
                 Invoke("RestartScene", 1.3f);
                 break;
         }  
