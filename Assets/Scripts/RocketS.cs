@@ -10,6 +10,7 @@ public class RocketS : MonoBehaviour
     private bool flying = false; // Used for thrust fade in and out sound effect
     public float flyPower = 100f;
     public float rotationSpd= 100f;
+    [SerializeField] float levelLoadDelay = 1.2f;
 
     [SerializeField] AudioClip engine;
     [SerializeField] AudioClip crash;
@@ -95,7 +96,7 @@ public class RocketS : MonoBehaviour
                 camShaker.ShakeOnce(10f, 20f, .1f, 1f);
 
                 successParticles.Play();
-                Invoke("LoadNextScene", 1.2f);
+                Invoke("LoadNextScene", levelLoadDelay);
                 break;
             default:
                 print("Dead");

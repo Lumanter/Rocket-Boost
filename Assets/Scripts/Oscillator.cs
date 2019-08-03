@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Oscillator : MonoBehaviour
 {
@@ -11,19 +10,19 @@ public class Oscillator : MonoBehaviour
     [SerializeField] float movementFactor; // 0 for not moved, 1 for fully moved
 
     Vector3 startingPos;
-    bool on;
 
     void Start(){
         startingPos = transform.position;
-  
     }
 
     void Update(){
+        if (period <= Mathf.Epsilon) return; // compares to smallest float
 
         float cycles = (Time.time/period)+delay;
         const float tau = Mathf.PI * 2;
         float rawSinWave = Mathf.Sin(cycles * tau);// varies [-1,1]
         Vector3 offset = movementFactor * movementVector;
+
         transform.position = startingPos + offset;
         movementFactor = (rawSinWave / 2f) + 0.5f;
     }

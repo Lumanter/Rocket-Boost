@@ -5013,6 +5013,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flyPower: 90
   rotationSpd: 130
+  levelLoadDelay: 1.2
   engine: {fileID: 8300000, guid: e3d37a7d63ed1424299ec52a43972e8b, type: 3}
   crash: {fileID: 8300000, guid: be29d1f37f820fa429a4c270e7a60c9a, type: 3}
   success: {fileID: 8300000, guid: c13729364a903504d8b3a8e693782a3c, type: 3}
