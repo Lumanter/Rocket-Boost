@@ -20,7 +20,7 @@ public class RocketS : MonoBehaviour
     [SerializeField] ParticleSystem successParticles;
 
     //public cameraShake camShake;
-    public 
+    [SerializeField] CameraShaker camShaker;
 
     enum State {Alive,Dying,Transcending}
     State state = State.Alive;
@@ -91,8 +91,8 @@ public class RocketS : MonoBehaviour
                 sfx.volume = 1;
                 sfx.Stop();
                 sfx.PlayOneShot(success);
-                //StartCoroutine(camShake.Shake(.2f, .8f));
-                CameraShaker.Instance.ShakeOnce(10f, 20f, .1f, 1f);
+
+                camShaker.ShakeOnce(10f, 20f, .1f, 1f);
 
                 successParticles.Play();
                 Invoke("LoadNextScene", 1.2f);
@@ -104,10 +104,12 @@ public class RocketS : MonoBehaviour
                 sfx.volume = 1;
                 sfx.PlayOneShot(crash);
 
-                //StartCoroutine(camShake.Shake(.2f,.4f));
-                CameraShaker.Instance.ShakeOnce(5f,12f,.1f,1f);
+                camShaker.ShakeOnce(5f,12f,.1f,1f);
 
+                engineParticles.Stop();
                 crashParticles.Play();
+
+                GetComponent<Rigidbody>().AddTorque(transform.up*14);
 
                 Invoke("RestartScene", 1.3f);
                 break;

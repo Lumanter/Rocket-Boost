@@ -4979,7 +4979,7 @@ Rigidbody:
   m_GameObject: {fileID: 7530211405847597405}
   serializedVersion: 2
   m_Mass: 0.055
-  m_Drag: 0.6
+  m_Drag: 0.7
   m_AngularDrag: 0.01
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -5011,14 +5011,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0035a385fb3590a4499486962e86df8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flyPower: 60
-  rotationSpd: 100
+  flyPower: 90
+  rotationSpd: 130
   engine: {fileID: 8300000, guid: e3d37a7d63ed1424299ec52a43972e8b, type: 3}
   crash: {fileID: 8300000, guid: be29d1f37f820fa429a4c270e7a60c9a, type: 3}
   success: {fileID: 8300000, guid: c13729364a903504d8b3a8e693782a3c, type: 3}
   engineParticles: {fileID: 198100718170940235}
   crashParticles: {fileID: 198204746191944640}
   successParticles: {fileID: 198631064577250315}
+  camShaker: {fileID: 0}
 --- !u!82 &4666945259612237060
 AudioSource:
   m_ObjectHideFlags: 0
