@@ -26,16 +26,26 @@ public class RocketS : MonoBehaviour
     enum State {Alive,Dying,Transcending}
     State state = State.Alive;
 
+    private bool collisionsOn;
+
 
     void Start(){
         rigidBody = GetComponent<Rigidbody>();
         sfx = GetComponent<AudioSource>();
         sfx.volume=0;
+        collisionsOn = true;
+    }
+
+    void Update(){
+        if(state==State.Alive)
+            ProcessInput();
+            if(Debug.isDebugBuild)
+                DebugKeys();
     }
 
     private void ProcessInput(){
 
-        if(Input.GetKey("up")){
+        if (Input.GetKey("up")){
             rigidBody.AddRelativeForce(Vector3.up*flyPower*Time.deltaTime);
 
             engineParticles.Play();
@@ -66,19 +76,23 @@ public class RocketS : MonoBehaviour
         rigidBody.freezeRotation=false;
     }
 
-    void Update(){
-        if(state==State.Alive)
-            ProcessInput();
-    }
-
     private void LoadNextScene(){
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        if (SceneManager.GetActiveScene().buildIndex + 1 == SceneManager.sceneCountInBuildSettings)
+            SceneManager.LoadScene(0);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
     }
 
     private void RestartScene(){
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    void DebugKeys()
+    {
+        if (Input.GetKey("l")) LoadNextScene();
+
+        if (Input.GetKeyDown(KeyCode.C))
+            collisionsOn = !collisionsOn;
+    }
     void OnCollisionEnter(Collision collision) {
         //prevents unnecessary processing when not alive
         if (state != State.Alive)return;
@@ -99,20 +113,22 @@ public class RocketS : MonoBehaviour
                 Invoke("LoadNextScene", levelLoadDelay);
                 break;
             default:
-                print("Dead");
-                state = State.Dying;
-                sfx.Stop();
-                sfx.volume = 1;
-                sfx.PlayOneShot(crash);
+                if (collisionsOn){
+                    print("Dead");
+                    state = State.Dying;
+                    sfx.Stop();
+                    sfx.volume = 1;
+                    sfx.PlayOneShot(crash);
 
-                camShaker.ShakeOnce(5f,12f,.1f,1f);
+                    camShaker.ShakeOnce(5f, 12f, .1f, 1f);
 
-                engineParticles.Stop();
-                crashParticles.Play();
+                    engineParticles.Stop();
+                    crashParticles.Play();
 
-                GetComponent<Rigidbody>().AddTorque(transform.up*14);
+                    GetComponent<Rigidbody>().AddTorque(transform.up * 14);
 
-                Invoke("RestartScene", 1.3f);
+                    Invoke("RestartScene", 1.3f);
+                }
                 break;
         }  
     }

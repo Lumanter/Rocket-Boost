@@ -7,6 +7,8 @@ public class FollowPlayer : MonoBehaviour{
 
     private Vector3 _cameraOffset;
 
+    [SerializeField] bool rotationZ=false;
+
     [Range(0.01f,1.0f)]
     public float SmoothFactor = 0.5f;
 
@@ -19,6 +21,12 @@ public class FollowPlayer : MonoBehaviour{
     void LateUpdate(){
         Vector3 newPos = playerTransform.position + _cameraOffset;
         transform.position = Vector3.Slerp(transform.position,newPos,SmoothFactor);
-        
+
+        if (rotationZ)
+            transform.eulerAngles = new Vector3(
+            transform.eulerAngles.x,
+            transform.eulerAngles.y,
+            playerTransform.eulerAngles.z
+            );
     }
 }
