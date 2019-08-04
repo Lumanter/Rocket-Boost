@@ -43,7 +43,15 @@ public class RocketS : MonoBehaviour
                 DebugKeys();
     }
 
+    private void LateUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.B)){
+            GetComponent<Rigidbody>().AddRelativeForce(Vector3.up*2,ForceMode.Impulse);
+        }
+    }
+
     private void ProcessInput(){
+
 
         if (Input.GetKey("up")){
             rigidBody.AddRelativeForce(Vector3.up*flyPower*Time.deltaTime);
@@ -74,6 +82,9 @@ public class RocketS : MonoBehaviour
         if(Input.GetKey("right"))
             transform.Rotate(Vector3.back*rotationSpd*Time.deltaTime);
         rigidBody.freezeRotation=false;
+
+        if( (Input.GetKey("left") || Input.GetKey("right")) && transform.rotation.y==0)
+            GetComponent<Animator>().SetInteger("spinning", 0);
     }
 
     private void LoadNextScene(){
